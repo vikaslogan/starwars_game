@@ -1,0 +1,168 @@
+First Part:
+
+Import the modules “turtle,” “math,” and “random.” Set a turtle screen in the “window” variable. Set the screen up as “width=600, height=600”. Then, declare the background color of the screens as black.
+import turtle
+import math
+import random
+
+window = turtle.Screen()
+window.setup(width=600, height=600)
+window.title("Star Wars Game by Ankur Gajurel")
+window.bgcolor("black")
+Set the tracer to 0. Likewise, set the vertices as “(0,15),(-15,0),(-18,5),(-18,-5),(0,0),(18,-5),(18, 5),(15, 0)” in the “vertex” variable. Similarly, register the shape as “player” and the vertex variable from above.
+window.tracer(0)
+vertex = ((0,15),(-15,0),(-18,5),(-18,-5),(0,0),(18,-5),(18, 5),(15, 0))
+window.register_shape("player", vertex)
+asVertex = ((0, 10), (5, 7), (3,3), (10,0), (7, 4), (8, -6), (0, -10), (-5, -5), (-7, -7), (-10, 0), (-5, 4), (-1, 8))
+window.register_shape("chattan", asVertex)
+
+ 
+
+Second Part:
+
+Inherit the “Turtle” from the “turtle” module into a class named “Ankur”. Initialize with the function __init__(self). Then, set the initializer as the turtle. Likewise, set the speed to 0 and pick the pen up as we are not ready to draw.
+class Ankur(turtle.Turtle):
+    def __init__(self):
+        turtle.Turtle.__init__(self)
+
+        self.speed(0)
+        self.penup()
+Coming out of the function, create a function(ankur1) with the parameters “t1” and “t2”. Inside this function, set the current x coordinate into the variable x1 and the y coordinate into y1. Then, do the same with the t2 and “x2”, “y2”. Similarly, set the arctangent of “y1-y2” and “x1-x2” into “taauko” with the math module. Again, multiply the “taauko” with “180.0 / 3.14159” and return “taauko”.
+def ankur1(t1, t2):
+    x1 = t1.xcor()
+    y1 = t1.ycor()
+    
+    x2 = t2.xcor()
+    y2 = t2.ycor()
+    
+    taauko = math.atan2(y1 - y2, x1 - x2)
+    taauko = taauko * 180.0 / 3.14159
+    
+    return taauko
+Create an object named “player” from the Ankur() class. Then, set the color to white and the shape to “player”. Declare the score of the player object to 0.
+player = Ankur()
+player.color("white")
+player.shape("player")
+player.score = 0
+Third Part:
+Create an empty list named “missiles”. Then, create a for loop with the range of 3. Inside this loop, create an object from Ankur() named “missile”. Likewise, set the color of the missile to red, shape as an arrow. Then, declare the speed of the missile to 1 and state it as “ready”. Similarly, hide the turtle and append the current missile into the “missiles” list.
+missiles = []
+for _ in range(3):
+    missile = Ankur()
+    missile.color("red")
+    missile.shape("arrow")
+    missile.speed = 1
+    missile.state = "ready"
+    missile.hideturtle()
+    missiles.append(missile)
+Now, coming out of the loop, create another object from Ankur() as “pen”. Set the color of this turtle object as white and hide the turtle. Then, position the turtle to (0, 250). After that, we will display the score with the code below.
+pen = Ankur()
+pen.color("white")
+pen.hideturtle()
+pen.goto(0, 250)
+pen.write("Score: 0", False, align = "center", font = ("Arial", 24, "normal"))
+Fourth Part:
+Create an empty list with the variable “chattans”.These will be used as asteroids. Then, create a for loop with the range of 5. Inside this loop, create an object from Ankur() as “chattan” and set the color of the chattan as brown and shape as an arrow. Now, we will set the speed of the chattan as a random integer from the following code.
+chattans = []
+
+for _ in range(5):   
+    chattan = Ankur()
+    chattan.color("brown")
+    chattan.shape("arrow")
+Inside the loop itself, position the chattan to the origin. Set another variable named “taauko” and a random integer value from 0 to 260. Again, create another variable “distance” and set the random value as an integer from 300 to 400. Likewise, set the heading of the chattan as “taauko” and move the chattan forward at the “distance” unit. Similarly, add the current value of “chattan” into the list “chattans”
+    chattan.speed  = random.randint(2, 3)/50
+    chattan.goto(0, 0)
+    taauko = random.randint(0, 260)
+    distance = random.randint(300, 400)
+    chattan.setheading(taauko)
+    chattan.fd(distance)
+    chattan.setheading(ankur1(player, chattan))
+    chattans.append(chattan)
+Functions for the defense:
+Here, create a function baanya() where you will set the turtle left at an angle of 20 degrees.
+Likewise, create another function daanya() where the turtle will be set right at an angle of 20 degrees.
+def baanya():
+    player.lt(20)
+    
+def daanya():
+    player.rt(20)
+Likewise, create a function fire_missile(). Inside this function, create a for loop which will loop through the “missiles” list and set the values in “missile”. Again, inside this function check if the state of the missile “ready”. Then, position the missile to (0, 0) and show the turtle which was hidden before with the method hideturtle(). Set the heading of the missile the same as the “player” turtle. Change the state of the missile to “fire” and break the loop.
+def fire_missile():
+    for missile in missiles:
+        if missile.state == "ready":
+            missile.goto(0, 0)
+            missile.showturtle()
+            missile.setheading(player.heading())
+            missile.state = "fire"
+            break
+After the functions, call the listen() method and call the onkey method on the “Left” key with the baanya function. Do the same with the other two functions as in the code below.
+window.listen()
+window.onkey(baanya, "Left")
+window.onkey(daanya, "Right")
+window.onkey(fire_missile, "space")
+
+ 
+Functioning the Code – Part 1:
+Here, create an infinite loop of “while True:”. Now, update the turtle GUI and position the player turtle to the origin.
+sakkyo = False
+while True:
+
+    window.update()
+    player.goto(0, 0)
+Then, create a for loop which will loop through the “missiles” list. Inside this list, check if the state if the current value of “missiles” is “fire” and move the missile forward at a distance equal to the speed. Again, check if “missile.xcor() > 300 or missile.xcor() < -300 or missile.ycor() > 300 or missile.ycor() < -300”. If so, hide the turtle and set the state to “ready”.
+    for missile in missiles:
+        if missile.state == "fire":
+            missile.fd(missile.speed)
+        
+        if missile.xcor() > 300 or missile.xcor() < -300 or missile.ycor() > 300 or missile.ycor() < -300:
+            missile.hideturtle()
+            missile.state = "ready"
+Create another for loop that will loop through the “chattans” list. Here, move the turtle forward at a distance same as the speed of the current value of “chattan”
+    for chattan in chattans:    
+        chattan.fd(chattan.speed)
+Again, inside this list, create another loop that will loop through the “missiles” list. Here, see if the distance from chattan to the missile is less than 20.
+If so, then declare a variable named “taauko” and “distance” and set the value as a random integer from 0 to 260 and a random integer from 600 to 800 respectively. Set the heading of the “chattan to “taauko” and move it forward at a distance of “distance”.
+for missile in missiles:
+            if chattan.distance(missile) < 20:
+                taauko = random.randint(0, 260)
+                distance = random.randint(600, 800)
+                chattan.setheading(taauko)
+                chattan.fd(distance)
+Again, set the heading of the “chattan” turtle as the function ankur1() and send the parameters “player1, chattan”. Likewise, change the speed of the “chattan” where 0.01 will be added as in the code below.
+                chattan.setheading(ankur1(player, chattan))
+                chattan.speed += 0.01
+Now, position the “missile” turtle to (600, 600), hide the turtle and set the state of the “missile” to “ready”.
+                missile.goto(600, 600)
+                missile.hideturtle()
+                missile.state = "ready"
+After that, add 10 to the “player.score” and clear the turtle pen. Now, write the score on the screen with the code below.
+                player.score += 10
+                pen.clear()
+                pen.write("Score: {}".format(player.score), False, align = "center", font = ("Arial", 24, "normal"))
+Functioning the Code – Part 2:
+Continuing, check if the distance from “chattan” to the “player” is less than 20. If so, declare a variable “taauko” and set the value as a random integer from 0 to 260. Again, declare another variable “distance” and set the value as a random integer from 600 to 800.
+if chattan.distance(player) < 20:
+            taauko = random.randint(0, 260)
+            distance = random.randint(600, 800)
+Now, set the heading of the “chattan” as “taauko” and move the turtle forward at a unit of “distance” from above.
+            chattan.setheading(taauko)
+            chattan.fd(distance)
+Likewise, again, set the heading of the chattan as the function ankur1() and send the arguments “player1, chattan”. Similarly, add 0.005 to the speed of the “chattan”. Accordingly, declare a variable “sakkyo” and set the value as “True”.
+
+            chattan.setheading(ankur1(player, chattan))
+            chattan.speed += 0.005
+            sakkyo = True
+Then, decrease the score of the player by 30. and clear the pen. Again, write the score of the “player” with the code below.
+            player.score -= 30
+            pen.clear()
+            pen.write("Score: {}".format(player.score), False, align = "center", font = ("Arial", 24, "normal"))
+Lastly, check if “sakkyo” is “True”. Here, hide all the turtles of “player” and missile. Now, create a for loop which will loop through the list “chattans” and hide all the turtles in that loop. Clear the pen and break the loop. Close the GUI with the mainloop().
+    if sakkyo == True:
+        player.hideturtle()
+        missile.hideturtle()
+        for a in chattans:
+            a.hideturtle()
+        pen.clear()
+        break
+
+window.mainloop()
